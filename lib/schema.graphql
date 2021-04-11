@@ -1,0 +1,146 @@
+scalar DateTime
+
+enum EntryType {
+  EXPENSE
+  INCOME
+  TRANSFER_EXPENSE
+  TRANSFER_INCOME
+}
+
+input CreateCategoryInput {
+  name: String!
+  superCategoryId: Int
+}
+
+input CreateEntryInput {
+  value: Int
+  description: String
+  timestamp: DateTime
+  place: String
+  isFixed: Boolean
+  type: EntryType!
+  walletId: Int
+  categoryId: Int
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+}
+
+input CreateWalletInput {
+  name: String!
+  initialAmmount: Int
+  isTransferable: Boolean
+}
+
+input Credentials {
+  email: String!
+  password: String!
+}
+
+input UpdateCategoryInput {
+  name: String
+  superCategoryId: Int
+}
+
+input UpdateEntryInput {
+  value: Int
+  description: String
+  timestamp: DateTime
+  place: String
+  isFixed: Boolean
+  type: EntryType
+  walletId: Int
+  categoryId: Int
+}
+
+input UpdateUserInput {
+  email: String
+  password: String
+}
+
+input UpdateWalletInput {
+  name: String
+  initialAmmount: Int
+  isTransferable: Boolean
+}
+
+type AuthToken {
+  token: String!
+}
+
+type Category {
+  id: Int!
+  name: String!
+  ownerId: Int!
+  superCategoryId: Int
+  subCategories: [Category!]!
+  entries: [Entry!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Entry {
+  id: Int!
+  value: Int!
+  description: String
+  timestamp: DateTime!
+  place: String
+  isFixed: Boolean!
+  type: EntryType!
+  ownerId: Int!
+  walletId: Int
+  categoryId: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  auth(data: Credentials): AuthToken
+  createCategory(data: CreateCategoryInput): Category
+  createEntry(data: CreateEntryInput): Entry
+  createUser(data: CreateUserInput): User
+  createWallet(data: CreateWalletInput): Wallet
+  deleteCategory(id: Int!): Category
+  deleteEntry(id: Int!): Entry
+  deleteUser(id: Int!): User
+  deleteWallet(id: Int!): Wallet
+  updateCategory(id: Int! data: UpdateCategoryInput): Category
+  updateEntry(id: Int! data: UpdateEntryInput): Entry
+  updateUser(id: Int! data: UpdateUserInput): User
+  updateWallet(id: Int! data: UpdateWalletInput): Wallet
+}
+
+type Query {
+  category(id: Int!): Category
+  entry(id: Int!): Entry
+  user(id: Int!): User
+  wallet(id: Int!): Wallet
+  allCategories: [Category!]!
+  allEntries: [Entry!]!
+  allUsers: [User!]!
+  allWallets: [Wallet!]!
+}
+
+type User {
+  id: Int!
+  email: String!
+  password: String
+  wallets: [Wallet!]!
+  categories: [Category!]!
+  entries: [Entry!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Wallet {
+  id: Int!
+  name: String!
+  initialAmmount: Int!
+  isTransferable: Boolean!
+  ownerId: Int!
+  entries: [Entry!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
