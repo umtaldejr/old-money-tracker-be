@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon --watch lib --exec babel-node lib/index.js",
     "build": "npm run prisma:generate && npm run prisma:migrate:deploy && babel lib -d dist",
+    "lint": "eslint --ext .js lib/",
+    "lint:fix": "eslint --ext .js lib/ --fix",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --preview-feature",
@@ -26,6 +28,9 @@
     "@babel/core": "^7.13.15",
     "@babel/node": "^7.13.13",
     "@babel/preset-env": "^7.13.15",
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.7",
     "prisma": "^2.21.2"
   }
