@@ -1,6 +1,5 @@
 scalar DateTime
 
-<<<<<<< HEAD
 enum EntryType {
   EXPENSE
   INCOME
@@ -8,8 +7,6 @@ enum EntryType {
   TRANSFER_INCOME
 }
 
-=======
->>>>>>> f48a73a... Implement create and read User, Wallet, Category and Entry
 input CreateCategoryInput {
   name: String!
   superCategoryId: Int
@@ -21,10 +18,7 @@ input CreateEntryInput {
   timestamp: DateTime
   place: String
   isFixed: Boolean
-<<<<<<< HEAD
   type: EntryType!
-=======
->>>>>>> f48a73a... Implement create and read User, Wallet, Category and Entry
   walletId: Int
   categoryId: Int
 }
@@ -37,10 +31,7 @@ input CreateUserInput {
 input CreateWalletInput {
   name: String!
   initialAmmount: Int
-<<<<<<< HEAD
   isTransferable: Boolean
-=======
->>>>>>> f48a73a... Implement create and read User, Wallet, Category and Entry
 }
 
 input Credentials {
@@ -48,7 +39,6 @@ input Credentials {
   password: String!
 }
 
-<<<<<<< HEAD
 input UpdateCategoryInput {
   name: String
   superCategoryId: Int
@@ -76,8 +66,6 @@ input UpdateWalletInput {
   isTransferable: Boolean
 }
 
-=======
->>>>>>> f48a73a... Implement create and read User, Wallet, Category and Entry
 type AuthToken {
   token: String!
 }
