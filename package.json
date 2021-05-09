@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch lib --exec babel-node lib/index.js",
+    "dev": "nodemon --ext js,graphql --exec babel-node lib/index.js",
     "build": "npm run prisma:generate && npm run prisma:migrate:deploy && babel lib -d dist",
     "lint": "eslint --ext .js lib/",
     "lint:fix": "eslint --ext .js lib/ --fix",
@@ -20,8 +20,11 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "2.20.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^8.2.0",
-    "graphql-yoga": "^1.18.3"
+    "graphql-iso-date": "^3.6.1",
+    "graphql-yoga": "^1.18.3",
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.14",
