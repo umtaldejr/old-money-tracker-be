@@ -1,12 +1,28 @@
+import { Entry as PrismaEntry } from '@prisma/client';
+
+import { Context } from '../context';
+
+type Entry = PrismaEntry;
+type CreateEntryInput = Omit<Entry, 'id' | 'ownerId' | 'createdAt' | 'updatedAt'>;
+type UpdateEntryInput = Partial<CreateEntryInput>;
+
 export default {
-  create: async (parent: any, args: any, context: any) => {
+  create: async (
+    parent: null,
+    args: { data: CreateEntryInput },
+    context: Context,
+  ): Promise<Entry | null> => {
     const { data } = args;
     const { prisma, userId } = context;
+
+    if (!userId) {
+      return null;
+    }
 
     const { categoryId } = data;
     if (categoryId) {
       const category = await prisma.category.findUnique({ where: { id: categoryId } });
-      if (category === null || category.ownerId !== userId) {
+      if (!category || category.ownerId !== userId) {
         return null;
       }
     }
@@ -14,7 +30,7 @@ export default {
     const { walletId } = data;
     if (walletId) {
       const wallet = await prisma.wallet.findUnique({ where: { id: walletId } });
-      if (wallet === null || wallet.ownerId !== userId) {
+      if (!wallet || wallet.ownerId !== userId) {
         return null;
       }
     }
@@ -24,47 +40,79 @@ export default {
     });
     return entry;
   },
-  delete: async (parent: any, args: any, context: any) => {
+
+  delete: async (
+    parent: null,
+    args: { id: Entry['id'] },
+    context: Context,
+  ): Promise<Entry | null> => {
     const { id } = args;
     const { prisma, userId } = context;
+
+    if (!userId) {
+      return null;
+    }
 
     const entry = await prisma.entry.findUnique({
       where: { id },
     });
-    if (entry.ownerId !== userId) {
+    if (!entry || entry.ownerId !== userId) {
       return null;
     }
 
     await prisma.entry.delete({ where: { id } });
     return entry;
   },
-  read: async (parent: any, args: any, context: any) => {
+
+  read: async (
+    parent: null,
+    args: { id: Entry['id'] },
+    context: Context,
+  ): Promise<Entry | null> => {
     const { id } = args;
     const { prisma, userId } = context;
+
+    if (!userId) {
+      return null;
+    }
 
     const entry = await prisma.entry.findUnique({
       where: { id },
     });
     return entry?.ownerId === userId ? entry : null;
   },
-  readAll: (parent: any, args: any, context: any) => {
+
+  readAll: (
+    parent: null,
+    args: null,
+    context: Context,
+  ): Promise<Entry[]> => {
     const { prisma } = context;
 
     return prisma.entry.findMany();
   },
-  update: async (parent: any, args: any, context: any) => {
+
+  update: async (
+    parent: null,
+    args: { id: Entry['id'], data: UpdateEntryInput },
+    context: Context,
+  ): Promise<Entry | null> => {
     const { id, data } = args;
     const { prisma, userId } = context;
 
-    const entry = prisma.entry.findUnique({ where: { id } });
-    if (entry === null || entry.ownerId !== userId) {
+    if (!userId) {
+      return null;
+    }
+
+    const entry = await prisma.entry.findUnique({ where: { id } });
+    if (!entry || entry.ownerId !== userId) {
       return null;
     }
 
     const { categoryId } = data;
     if (categoryId) {
       const category = await prisma.category.findUnique({ where: { id: categoryId } });
-      if (category === null || category.ownerId !== userId) {
+      if (!category || category.ownerId !== userId) {
         return null;
       }
     }
@@ -72,7 +120,7 @@ export default {
     const { walletId } = data;
     if (walletId) {
       const wallet = await prisma.wallet.findUnique({ where: { id: walletId } });
-      if (wallet === null || wallet.ownerId !== userId) {
+      if (!wallet || wallet.ownerId !== userId) {
         return null;
       }
     }

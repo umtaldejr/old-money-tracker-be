@@ -1,31 +1,20 @@
 import 'dotenv/config';
 
-import { PrismaClient } from '@prisma/client';
 import { GraphQLServer } from 'graphql-yoga';
 import { GraphQLDateTime } from 'graphql-iso-date';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+
 
 import AuthController from './controllers/Auth';
 import CategoryController from './controllers/Category';
 import EntryController from './controllers/Entry';
 import UserController from './controllers/User';
 import WalletController from './controllers/Wallet';
-import authenticate from './utils/authenticate';
 
-const prisma = new PrismaClient();
+import context from './context'
+
 
 const server = new GraphQLServer({
-  context: ({ request }) => {
-    const DEFAULT_CONTEXT = {
-      bcrypt,
-      env: process.env,
-      jwt,
-      prisma,
-    };
-    const userId = authenticate(request);
-    return userId ? { ...DEFAULT_CONTEXT, userId } : DEFAULT_CONTEXT;
-  },
+  context,
   resolvers: {
     DateTime: GraphQLDateTime,
     Mutation: {
@@ -53,11 +42,11 @@ const server = new GraphQLServer({
       user: UserController.read,
       wallet: WalletController.read,
     },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any,
   typeDefs: './lib/schema.graphql',
 });
 
 server.start(() => {
-  // eslint-disable-next-line no-console
   console.log('🚀  Server ready at http://localhost:4000/');
 });

@@ -1,5 +1,18 @@
+import { User as PrismaUser } from '@prisma/client';
+
+import { Context } from '../context';
+
+type User = PrismaUser;
+type UserOutput = Omit<User, 'password'>;
+type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+type UpdateUserInput = Partial<CreateUserInput>;
+
 export default {
-  create: async (parent: any, args: any, context: any) => {
+  create: async (
+    parent: null,
+    args: { data: CreateUserInput },
+    context: Context,
+  ): Promise<UserOutput | null> => {
     const { data } = args;
     const { bcrypt, prisma } = context;
 
@@ -7,12 +20,18 @@ export default {
     const SALT_ROUNDS = 10;
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const user = await prisma.user.create({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...user } = await prisma.user.create({
       data: { ...data, password: hash },
     });
-    return { ...user, password: null };
+    return user;
   },
-  delete: async (parent: any, args: any, context: any) => {
+
+  delete: async (
+    parent: null,
+    args: { id: User['id'] },
+    context: Context,
+  ): Promise<UserOutput | null> => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -20,6 +39,7 @@ export default {
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const user = await prisma.user.findUnique({
       include: { categories: true, entries: true, wallets: true },
       where: { id },
@@ -32,9 +52,14 @@ export default {
       prisma.user.delete({ where: { id } }),
     ]);
 
-    return { ...user, password: null };
+    return user;
   },
-  read: async (parent: any, args: any, context: any) => {
+
+  read: async (
+    parent: null,
+    args: { id: User['id'] },
+    context: Context,
+  ): Promise<UserOutput | null> => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -42,20 +67,31 @@ export default {
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const user = await prisma.user.findUnique({
       include: { categories: true, entries: true, wallets: true },
       where: { id },
     });
-    return { ...user, password: null };
+    return user;
   },
-  readAll: (parent: any, args: any, context: any) => {
+
+  readAll: (
+    parent: null,
+    args: null,
+    context: Context,
+  ): Promise<User[]> => {
     const { prisma } = context;
 
     return prisma.user.findMany({
       include: { categories: true, entries: true, wallets: true },
     });
   },
-  update: async (parent: any, args: any, context: any) => {
+
+  update: async (
+    parent: null,
+    args: { id: User['id'], data: UpdateUserInput },
+    context: Context,
+  ): Promise<UserOutput | null> => {
     const { id, data: _data } = args;
     const { bcrypt, prisma, userId } = context;
 
@@ -69,10 +105,11 @@ export default {
       ? { ..._data, password: await bcrypt.hash(password, SALT_ROUNDS) }
       : _data;
 
-    const user = await prisma.user.update({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...user } = await prisma.user.update({
       data,
       where: { id },
     });
-    return { ...user, password: null };
+    return user;
   },
 };
