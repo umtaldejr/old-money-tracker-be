@@ -1,5 +1,5 @@
 export default {
-  auth: async (parent, args, context) => {
+  auth: async (parent: any, args: any, context: any) => {
     const { data: { email, password } } = args;
     const {
       bcrypt,

@@ -53,7 +53,7 @@ const server = new GraphQLServer({
       user: UserController.read,
       wallet: WalletController.read,
     },
-  },
+  } as any,
   typeDefs: './lib/schema.graphql',
 });
 

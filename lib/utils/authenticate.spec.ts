@@ -23,8 +23,12 @@ describe('authenticate', () => {
     });
 
     describe('with a valid token', () => {
-      let token;
-      let request;
+      let token: string;
+      let request: {
+        headers: {
+          authorization: string,
+        },
+      };
 
       beforeEach(() => {
         token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTYyMDYwNjM0OH0.EmO2WD4UB4IO_aROUXqsF44PoLJTZcXDxG65ojloUt8';
@@ -37,7 +41,7 @@ describe('authenticate', () => {
 
       it('should call the verify method with the correct arguments', () => {
         const env = { JWT_SECRET: 'secret' };
-        const jwt = { verify: jest.fn(() => ({ userId: 1 })) };
+        const jwt = { verify: jest.fn(() => ({ userId: 1 })) } as any;
         authenticate(request, env, jwt);
         expect(jwt.verify).toHaveBeenCalledWith(token, env.JWT_SECRET);
       });
@@ -45,7 +49,7 @@ describe('authenticate', () => {
       it('should return the userId from the verify result', () => {
         const env = { JWT_SECRET: 'secret' };
         const userId = 1;
-        const jwt = { verify: jest.fn(() => ({ userId })) };
+        const jwt = { verify: jest.fn(() => ({ userId })) } as any;
         const result = authenticate(request, env, jwt);
         expect(result).toBe(userId);
       });
@@ -64,7 +68,7 @@ describe('authenticate', () => {
           verify: jest.fn(() => {
             throw Error();
           }),
-        };
+        } as any;
         const result = authenticate(request, env, jwt);
         expect(result).toBe(null);
       });

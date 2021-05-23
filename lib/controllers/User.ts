@@ -1,5 +1,5 @@
 export default {
-  create: async (parent, args, context) => {
+  create: async (parent: any, args: any, context: any) => {
     const { data } = args;
     const { bcrypt, prisma } = context;
 
@@ -12,7 +12,7 @@ export default {
     });
     return { ...user, password: null };
   },
-  delete: async (parent, args, context) => {
+  delete: async (parent: any, args: any, context: any) => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -34,7 +34,7 @@ export default {
 
     return { ...user, password: null };
   },
-  read: async (parent, args, context) => {
+  read: async (parent: any, args: any, context: any) => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -48,14 +48,14 @@ export default {
     });
     return { ...user, password: null };
   },
-  readAll: (parent, args, context) => {
+  readAll: (parent: any, args: any, context: any) => {
     const { prisma } = context;
 
     return prisma.user.findMany({
       include: { categories: true, entries: true, wallets: true },
     });
   },
-  update: async (parent, args, context) => {
+  update: async (parent: any, args: any, context: any) => {
     const { id, data: _data } = args;
     const { bcrypt, prisma, userId } = context;
 

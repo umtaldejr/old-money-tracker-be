@@ -1,5 +1,5 @@
 export default {
-  create: async (parent, args, context) => {
+  create: async (parent: any, args: any, context: any) => {
     const { data } = args;
     const { prisma, userId } = context;
 
@@ -8,7 +8,7 @@ export default {
     });
     return wallet;
   },
-  delete: async (parent, args, context) => {
+  delete: async (parent: any, args: any, context: any) => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -23,7 +23,7 @@ export default {
     await prisma.wallet.delete({ where: { id } });
     return wallet;
   },
-  read: async (parent, args, context) => {
+  read: async (parent: any, args: any, context: any) => {
     const { id } = args;
     const { prisma, userId } = context;
 
@@ -33,14 +33,14 @@ export default {
     });
     return wallet?.ownerId === userId ? wallet : null;
   },
-  readAll: (parent, args, context) => {
+  readAll: (parent: any, args: any, context: any) => {
     const { prisma } = context;
 
     return prisma.wallet.findMany({
       include: { entries: true },
     });
   },
-  update: async (parent, args, context) => {
+  update: async (parent: any, args: any, context: any) => {
     const { id, data } = args;
     const { prisma, userId } = context;
 
