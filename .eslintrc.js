@@ -21,6 +21,12 @@ module.exports = {
   },
   rules: {
     'quotes': ['error', 'single'],
+    'semi': ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
+    'import/order': ['error', {
+      'newlines-between': 'always',
+      'alphabetize': { 'order': 'asc', 'caseInsensitive': false },
+    }],
     '@typescript-eslint/indent': ['error', 2],
   },
 };

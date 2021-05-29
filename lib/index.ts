@@ -1,16 +1,16 @@
 import 'dotenv/config';
 
-import { GraphQLServer } from 'graphql-yoga';
 import { GraphQLDateTime } from 'graphql-iso-date';
+import { GraphQLServer } from 'graphql-yoga';
 
 
+import context from './context';
 import AuthController from './controllers/Auth';
 import CategoryController from './controllers/Category';
 import EntryController from './controllers/Entry';
 import UserController from './controllers/User';
 import WalletController from './controllers/Wallet';
 
-import context from './context'
 
 
 const server = new GraphQLServer({

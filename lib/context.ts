@@ -1,15 +1,11 @@
 import { PrismaClient, User } from '@prisma/client';
-import { ContextParameters, Context as ContextType } from 'graphql-yoga/dist/types';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { ContextParameters, Context as ContextType } from 'graphql-yoga/dist/types';
 import { MockProxy, mockDeep } from 'jest-mock-extended';
+import jwt from 'jsonwebtoken';
 
+import Environment from './types/Environment';
 import authenticate from './utils/authenticate';
-
-type Environment = NodeJS.ProcessEnv & {
-  JWT_SECRET: string
-  DATABASE_URL: string
-}
 
 export type Context = ContextType & {
   bcrypt: typeof bcrypt,
@@ -27,26 +23,26 @@ export type MockContext = {
   userId?: User['id'],
 }
 
-const DEFAULT_CONTEXT: Context = {
-  bcrypt,
-  env: process.env as Environment,
-  jwt,
-  prisma: new PrismaClient(),
-};
-
 export const createMockContext = (): MockContext => {
   return {
     prisma: mockDeep<PrismaClient>(),
     env: {
       JWT_SECRET: 'secret',
-      DATABASE_URL: 'postgresql://user:secret@localhost'
+      DATABASE_URL: 'postgresql://user:secret@localhost',
     },
     bcrypt: mockDeep<typeof bcrypt>(),
     jwt: mockDeep<typeof jwt>(),
   };
-}
+};
 
 export default ({ request }: ContextParameters): Context => {
+  const DEFAULT_CONTEXT: Context = {
+    bcrypt,
+    env: process.env as Environment,
+    jwt,
+    prisma: new PrismaClient(),
+  };
+
   const userId = authenticate(request);
   return userId ? { ...DEFAULT_CONTEXT, userId } : DEFAULT_CONTEXT;
-}
+};
