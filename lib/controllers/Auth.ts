@@ -30,7 +30,7 @@ export default {
       return null;
     }
 
-    const areCredentialsValid = await bcrypt.compare(password, user.password);
+    const areCredentialsValid = bcrypt.compareSync(password, user.password);
     if (!areCredentialsValid) return null;
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET as Secret);
